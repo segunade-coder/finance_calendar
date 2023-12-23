@@ -1,0 +1,71 @@
+.cashin-card {
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .p-inputtext,
+  .p-inputnumber,
+  .p-dropdown,
+  .p-inputtextarea {
+    width: 100%;
+  }
+}
+.p-dialog {
+  @media screen and (max-width: 1000px) {
+    width: 50% !important;
+  }
+  @media screen and (max-width: 700px) {
+    width: 70% !important;
+  }
+  @media screen and (max-width: 500px) {
+    width: 95% !important;
+  }
+}
+.c-card {
+  width: 100%;
+  max-width: 300px;
+  min-width: 250px;
+
+  @media screen and (max-width: 700px) {
+    min-width: 100%;
+  }
+
+  .summary {
+    display: flex !important;
+    flex-direction: column;
+
+    & > span {
+      //   margin-bottom: 0.5rem;
+      font-size: small;
+      font-family: "Poppins-Light";
+    }
+  }
+}
+.cashin-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  @media screen and (max-width: 700px) {
+    flex-wrap: wrap;
+  }
+  .c-p-card {
+    display: flex;
+    width: 100% !important;
+    flex-direction: column;
+    gap: 1rem;
+
+    .p-card-body {
+      display: flex;
+      span {
+        width: 100%;
+        // display: flex;
+        flex: 1;
+      }
+    }
+  }
+}

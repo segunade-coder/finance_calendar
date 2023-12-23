@@ -1,0 +1,74 @@
+.cashin-card {
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.cashin-card .p-inputtext,
+.cashin-card .p-inputnumber,
+.cashin-card .p-dropdown,
+.cashin-card .p-inputtextarea {
+  width: 100%;
+}
+
+@media screen and (max-width: 1000px) {
+  .p-dialog {
+    width: 50% !important;
+  }
+}
+@media screen and (max-width: 700px) {
+  .p-dialog {
+    width: 70% !important;
+  }
+}
+@media screen and (max-width: 500px) {
+  .p-dialog {
+    width: 95% !important;
+  }
+}
+
+.c-card {
+  width: 100%;
+  max-width: 300px;
+  min-width: 250px;
+}
+@media screen and (max-width: 700px) {
+  .c-card {
+    min-width: 100%;
+  }
+}
+.c-card .summary {
+  display: flex !important;
+  flex-direction: column;
+}
+.c-card .summary > span {
+  font-size: small;
+  font-family: "Poppins-Light";
+}
+
+.cashin-container {
+  display: flex;
+  width: 100%;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+@media screen and (max-width: 700px) {
+  .cashin-container {
+    flex-wrap: wrap;
+  }
+}
+.cashin-container .c-p-card {
+  display: flex;
+  width: 100% !important;
+  flex-direction: column;
+  gap: 1rem;
+}
+.cashin-container .c-p-card .p-card-body {
+  display: flex;
+}
+.cashin-container .c-p-card .p-card-body span {
+  width: 100%;
+  flex: 1;
+}/*# sourceMappingURL=cashin.css.map */
