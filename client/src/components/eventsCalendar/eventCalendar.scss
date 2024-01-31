@@ -1,0 +1,525 @@
+.event-card {
+  padding: 2rem 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.p-inputtext,
+.p-dropdown,
+.p-calendar,
+.p-multiselect {
+  width: 100%;
+}
+.p-dialog {
+  @media screen and (max-width: 1000px) {
+    width: 50% !important;
+  }
+  @media screen and (max-width: 700px) {
+    width: 70% !important;
+  }
+  @media screen and (max-width: 500px) {
+    width: 95% !important;
+  }
+}
+
+.__events {
+  width: 100%;
+  display: flex;
+  // gap: 1rem;
+  border: 1px solid #f5f5f5;
+  border-radius: 10px 10px 0 0;
+
+  @media screen and (max-width: 750px) {
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .people {
+      max-width: 100% !important;
+    }
+  }
+  .people {
+    // flex-shrink: 1;
+    // flex-grow: 1;
+    width: 100%;
+    max-width: 370px;
+    padding: 0;
+    // max-height: calc(100vh - 140px);
+    // overflow: auto;
+    container-type: inline-size;
+    container-name: people;
+
+    @container people (max-width: 350px) {
+      .peep {
+        .content {
+          // width: 100%;
+          gap: 0.5rem !important;
+          padding: 0 !important;
+
+          .p-avatar {
+            transform: scale(0.8);
+          }
+          a {
+            font-size: 0.8rem;
+          }
+
+          .card-tasks {
+            max-width: 100px !important;
+          }
+        }
+      }
+    }
+    @container people (max-width: 245px) {
+      .peep {
+        .content {
+          flex-direction: column !important;
+          padding: 0.5rem 0 !important;
+          gap: 0 !important;
+          align-items: center !important;
+
+          .details {
+            text-align: center !important;
+            padding: 0 !important;
+
+            .card-tasks {
+              max-width: 100% !important;
+              text-align: center !important;
+            }
+          }
+        }
+        .cf {
+          padding: 0 !important;
+          margin-top: 0.5rem !important;
+          margin-bottom: 0.2rem !important;
+        }
+      }
+    }
+    &:has(.peep) {
+      border-right: 1px solid #e6e5e5;
+    }
+
+    .people-action {
+      display: flex;
+      gap: 1rem;
+      background-color: whitesmoke;
+      border-radius: 10px 0 0 0;
+
+      align-items: center;
+      padding: 0.3rem;
+      input {
+        // width: 70%;
+        height: 45px;
+      }
+    }
+    .people-card {
+      //   background-color: rebeccapurple;
+      //   width: 25%;
+      display: flex;
+      flex-direction: column;
+      // margin: 0.5rem 0;
+
+      .peep {
+        // padding: 1rem;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 0.3rem;
+        border-bottom: 1px solid #c5c5c5;
+        padding: 0 0.3rem;
+        position: relative;
+
+        .content {
+          // width: 100%;
+          display: flex;
+          height: max-content;
+          flex-wrap: nowrap;
+          flex-direction: row;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.5rem 0.5rem 0;
+
+          .p-avatar {
+            min-width: 3rem;
+          }
+          .details {
+            width: 100%;
+            padding: 0.3rem;
+
+            a {
+              text-transform: capitalize;
+              small {
+                text-transform: none;
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis !important;
+              }
+            }
+
+            .card-tasks {
+              display: block;
+              width: 100%;
+              max-width: 200px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis !important;
+              transform: translateY(10px);
+              text-transform: capitalize;
+            }
+          }
+        }
+
+        .cf {
+          padding: 0;
+          display: flex;
+          width: 100%;
+          justify-content: flex-end;
+          padding: 0.5rem 0.5rem 0.7rem;
+          margin-top: -1rem;
+        }
+        .p-footer {
+          position: absolute;
+          right: 0;
+        }
+      }
+    }
+  }
+  .tasks {
+    flex: 1;
+    // max-height: calc(100vh - 140px);
+    // background-color: red;
+    // padding: 0.7rem;
+    // container-type: inline-size;
+    // container-name: tasks;
+
+    &::-webkit-scrollbar {
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #eee;
+      outline: none;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #bdbdbd;
+      outline: none;
+    }
+
+    .tasks-heading {
+      display: flex;
+      background-color: whitesmoke;
+      padding: 0.3rem;
+      gap: 1rem;
+      justify-content: flex-start;
+
+      button {
+        width: fit-content;
+        margin-left: 0rem;
+      }
+      .p-dropdown:first-of-type {
+        max-width: 150px;
+        background-color: transparent;
+        // border: none;
+        box-shadow: none;
+      }
+      .p-dropdown {
+        height: 45px;
+        width: fit-content;
+      }
+      input {
+        max-width: 200px !important;
+        height: 45px;
+        margin-left: auto;
+      }
+    }
+    .tasks-card {
+      width: 100%;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0 0.3rem;
+      .task-card {
+        border-bottom: 1px solid #e7e7e7;
+        container-type: inline-size;
+        container-name: tasks;
+
+        @container tasks (max-width:750px) {
+          .task-content {
+            max-width: 130px !important;
+            min-width: 130px !important;
+          }
+
+          .rating {
+            display: none;
+          }
+          .progress {
+            max-width: 130px !important;
+            min-width: 130px !important;
+          }
+        }
+        @container tasks (max-width:630px) {
+          .task-content {
+            max-width: 100px !important;
+            min-width: 100px !important;
+          }
+          .progress {
+            max-width: 100px !important;
+            min-width: 100px !important;
+          }
+        }
+        @container tasks (max-width:530px) {
+          .progress {
+            max-width: 80px !important;
+            min-width: 80px !important;
+          }
+        }
+        @container tasks (max-width:500px) {
+          .task-content {
+            max-width: 80px !important;
+            min-width: 80px !important;
+          }
+
+          .rating,
+          .progress {
+            display: none;
+          }
+          .status button {
+            transform: scale(0.8);
+          }
+        }
+        @container tasks (max-width:364px) {
+          .task-content {
+            max-width: 60px !important;
+            min-width: 60px !important;
+          }
+
+          .status button {
+            transform: scale(0.6);
+          }
+        }
+        @container tasks (max-width:330px) {
+          .task-content {
+            max-width: 80px !important;
+            min-width: 80px !important;
+            font-size: 0.9rem;
+          }
+          .tasks-body {
+            gap: 0.8rem !important;
+          }
+          .deadline {
+            display: none;
+          }
+        }
+        .tasks-body {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          align-items: center;
+          padding: 0.7rem;
+          flex-wrap: wrap;
+          // min-width: 250px;
+        }
+
+        @media screen and (min-width: 1200px) {
+          min-width: 600px;
+        }
+        @media screen and (min-width: 1000px) {
+          min-width: 350px;
+        }
+        .task-content {
+          //   width: auto;
+          max-width: 200px;
+          min-width: 200px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          // @media screen and (max-width: 900px) {
+          //   min-width: 100%;
+          // }
+          @container tasks (min-width: 1300px) {
+            max-width: 250px;
+            min-width: 250px;
+          }
+          @media screen and (max-width: 1100px) {
+            min-width: 100px;
+            max-width: 100px;
+          }
+        }
+        .avatar-group {
+          display: flex;
+          max-width: 50px;
+          min-width: 50px;
+
+          //   .p-component,
+          .p-component span {
+            // margin-left: -0.3rem;
+            font-size: small;
+          }
+        }
+        .progress {
+          min-width: 150px;
+          max-width: 150px;
+
+          // @media screen and (max-width: 1000px) {
+          //   display: none;
+          // }
+          @media screen and (max-width: 1030px) {
+            max-width: 75px;
+            min-width: 75px;
+          }
+          @media screen and (max-width: 920px) {
+            max-width: 60px;
+            min-width: 60px;
+          }
+        }
+        .rating {
+          @media screen and (max-width: 1180px) {
+            display: none;
+          }
+        }
+        .status {
+          display: flex;
+          flex: 1;
+          max-width: 150px;
+          button {
+            flex: 1;
+            font-size: small;
+          }
+        }
+        .delete {
+          display: flex;
+          flex: 1;
+          max-width: 50px;
+          justify-content: flex-end;
+
+          @media screen and (max-width: 1200px) {
+            max-width: fit-content;
+          }
+        }
+      }
+    }
+  }
+}
+a {
+  color: #5a5a5a;
+}
+.p-progressbar-label {
+  font-size: small;
+}
+.__s-event {
+  flex: 1;
+  // flex-basis: 300px;
+  max-width: 300px;
+  border: 1px solid #e6e5e5;
+  // padding: 0.5rem;
+  border-radius: 0 10px 0 0;
+  // width: 100%;
+
+  @media screen and (max-width: 1100px) {
+    max-width: 250px;
+
+    .flex {
+      flex-direction: column !important;
+
+      button {
+        margin: 0 !important;
+      }
+      .p-dropdown {
+        width: 100% !important;
+      }
+    }
+  }
+  .heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+    background-color: whitesmoke;
+    border-radius: 0 10px 0 0;
+  }
+  .s-event-cont {
+    padding: 0 0.2rem;
+  }
+  small {
+    display: block;
+    margin: 0.9rem 0 0.3rem;
+    color: #6a6a6a;
+  }
+  .slider {
+    display: flex;
+    margin: 0.5rem 0;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.3rem;
+
+    .p-slider {
+      flex: 1 !important;
+    }
+    input {
+      max-width: 20%;
+      margin-left: 10px;
+    }
+  }
+  .deadline {
+    display: flex;
+    align-items: center;
+
+    .date {
+      width: 200px;
+    }
+  }
+  .p-people {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0;
+    gap: 0.5rem;
+    .p-multiselect {
+      width: 250px;
+    }
+  }
+  .p-dropdown {
+    width: 150px;
+  }
+}
+.__s_person {
+  flex: 1;
+  max-width: 300px;
+  @media screen and (max-width: 1100px) {
+    max-width: 250px;
+  }
+  // width: 100%;
+  .heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+    background-color: whitesmoke;
+    border-radius: 0 10px 0 0;
+  }
+  .p-multiselect {
+    max-width: 200px;
+  }
+}
+.loading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+.p-dropdown-item {
+  text-transform: capitalize !important;
+}
+.fallback-loading {
+  min-width: 300px;
+  min-height: 10vh;
+  display: flex;
+  justify-content: center;
+  padding: 5rem 0;
+}

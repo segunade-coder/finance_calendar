@@ -1,0 +1,1 @@
+chdir server && npm run dev
