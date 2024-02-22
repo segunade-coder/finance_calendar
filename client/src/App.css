@@ -131,7 +131,7 @@ nav {
   align-items: center;
   gap: 1rem;
   justify-content: center;
-  margin-top: 0.3rem;
+  margin: 0.3rem 0;
 }
 nav a {
   padding: 0.7rem;
@@ -143,15 +143,7 @@ nav a.active {
   color: #fff;
   border-bottom-right-radius: 20px;
 }
-.outlet-content {
-  /* width: 100%; */
-  /* padding: 0.5rem 0.5rem; */
-}
-@media screen and (max-width: 750px) {
-  .outlet-content {
-    /* padding: 0.5rem 1rem; */
-  }
-}
+
 .c-menu {
   display: none !important;
 }

@@ -106,9 +106,9 @@ const createTable = async () => {
       },
       {
         columnName: "status",
-        dataType: "varchar",
+        dataType: "INT",
         condition: "NOT NULL",
-        dataTypeLength: "50",
+        dataTypeLength: "11",
       },
       {
         columnName: "progress",
@@ -121,6 +121,23 @@ const createTable = async () => {
         dataType: "varchar",
         condition: "NOT NULL",
         dataTypeLength: "50",
+      },
+      {
+        columnName: "adminApprove",
+        dataType: "varchar",
+        condition: "NOT NULL",
+        dataTypeLength: "20",
+      },
+      {
+        columnName: "comments",
+        dataType: "JSON",
+        condition: "CHECK (JSON_VALID(comments))",
+      },
+      {
+        columnName: "sentMail",
+        dataType: "INT",
+        condition: "NOT NULL",
+        dataTypeLength: "11",
       }
     );
 

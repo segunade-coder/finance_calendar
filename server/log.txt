@@ -1,20 +1,33 @@
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:04:09 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:04:09 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:04:09 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:04:09 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:04:35 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:04:35 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:04:35 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:04:36 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:05:35 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:05:35 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:05:35 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:05:35 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:06:49 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:06:49 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:06:49 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:06:50 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:06:55 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:06:55 PM PST
-Duplicate column name 'id'  by user, on Tuesday, January 23, 2024 at 12:06:55 PM PST
-You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' assignTo JSON CHECK (JSON_VALID(personal_details)) , deadline VARCHAR(255) N...' at line 1  by user, on Tuesday, January 23, 2024 at 12:06:55 PM PST
+Started sending mail for status3 , on Thursday, February 22, 2024 at 10:11:12 AM PST
+Started sending mail for status2 , on Thursday, February 22, 2024 at 10:11:12 AM PST
+Started sending mail for status1 , on Thursday, February 22, 2024 at 10:11:12 AM PST
+Mail sent successfully with status number1 , on Thursday, February 22, 2024 at 10:11:18 AM PST
+Mail sent successfully with status number2 , on Thursday, February 22, 2024 at 10:11:45 AM PST
+Mail sent successfully with status number3 , on Thursday, February 22, 2024 at 10:11:46 AM PST
+Started sending mail for status 3 , on Thursday, February 22, 2024 at 10:23:07 AM PST
+Started sending mail for status 2 , on Thursday, February 22, 2024 at 10:23:07 AM PST
+Mail sent successfully with status number 2 , on Thursday, February 22, 2024 at 10:23:11 AM PST
+Mail sent successfully with status number 3 , on Thursday, February 22, 2024 at 10:23:41 AM PST
+no data to run , on Thursday, February 22, 2024 at 10:39:34 AM PST
+no data to run , on Thursday, February 22, 2024 at 10:42:46 AM PST
+no data to run , on Thursday, February 22, 2024 at 10:44:32 AM PST
+no data to run , on Thursday, February 22, 2024 at 10:48:18 AM PST
+Failed to send mail with status number 2 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Thursday, February 22, 2024 at 10:51:09 AM PST
+Mail sent successfully with status number 2 , on Thursday, February 22, 2024 at 10:52:02 AM PST
+no data to run , on Thursday, February 22, 2024 at 10:56:37 AM PST
+no data to run , on Thursday, February 22, 2024 at 11:48:09 AM PST
+no data to run , on Thursday, February 22, 2024 at 11:53:38 AM PST
+no data to run , on Thursday, February 22, 2024 at 11:55:46 AM PST
+no data to run , on Thursday, February 22, 2024 at 11:56:04 AM PST
+no data to run , on Thursday, February 22, 2024 at 11:56:50 AM PST
+no data to run , on Thursday, February 22, 2024 at 11:59:11 AM PST
+no data to run , on Thursday, February 22, 2024 at 12:02:19 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:03:23 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:08:28 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:10:48 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:13:10 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:16:29 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:17:58 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:18:58 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:20:57 PM PST
+no data to run , on Thursday, February 22, 2024 at 12:22:04 PM PST

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const createTables_1 = __importDefault(require("../../models/createTables"));
 const mysqlApi_1 = __importDefault(require("../../utils/mysqlApi"));
 const functions_1 = require("../../utils/functions");
+const emailStatus = [];
 const handleSockets = (socket) => {
     (0, createTables_1.default)();
     const req = socket.request;
@@ -23,71 +24,14 @@ const handleSockets = (socket) => {
     });
     socket.on("check-status", () => {
         socket.emit("status", {
-            user_id: req.session.user_id,
+            user_id: req.session.user_email,
             user: req.session.user,
             admin: req.session.isAdmin,
         });
     });
-    socket.on("get-cashin", () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const data = yield mysqlApi_1.default.getAll("cashin");
-            socket.emit("set-cashin", { data });
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }));
-    socket.on("get-cashout", () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const data = yield mysqlApi_1.default.getAll("cashout");
-            socket.emit("set-cashout", { data });
-        }
-        catch (error) {
-            // logToFile(error);
-            console.log(error);
-        }
-    }));
-    socket.on("get-people", () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const data = yield mysqlApi_1.default.getAll("people");
-            socket.emit("set-people", { data });
-        }
-        catch (error) {
-            // logToFile(error);
-            console.log(error);
-        }
-    }));
-    socket.on("get-person", (id) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const data = yield mysqlApi_1.default.queryString("SELECT * FROM people WHERE user_id = ?", [id]);
-            socket.emit("set-person", { data });
-        }
-        catch (error) {
-            // logToFile(error);
-        }
-    }));
-    // route to get individual tasks
-    socket.on("get-task", (id) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const data = yield mysqlApi_1.default.queryString("SELECT * FROM tasks WHERE id = ?", [
-                id,
-            ]);
-            socket.emit("set-task", { data });
-        }
-        catch (error) {
-            // logToFile(error);
-        }
-    }));
-    socket.on("get-tasks", () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const data = yield mysqlApi_1.default.getAll("tasks");
-            socket.emit("set-tasks", { data });
-        }
-        catch (error) {
-            // logToFile(error);
-            console.log(error);
-        }
-    }));
+    socket.on("get-mailStatus", () => {
+        socket.emit("mail-response", {});
+    });
     socket.on("get-others", () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const data = yield mysqlApi_1.default.getAll("others");
@@ -99,28 +43,6 @@ const handleSockets = (socket) => {
         }
     }));
     socket.on("get-summary", () => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b;
-        try {
-            const totalCashin = yield mysqlApi_1.default.query(`SELECT SUM(amount) AS cashin, category FROM cashin GROUP BY category`);
-            const totalCashout = yield mysqlApi_1.default.query("SELECT SUM(amount) AS cashout, category FROM cashout GROUP BY category");
-            let revenue = yield mysqlApi_1.default.queryString("SELECT SUM(amount) AS totalRevenue FROM cashin WHERE category = ?", ["revenue"]);
-            let debt = yield mysqlApi_1.default.queryString("SELECT SUM(amount) AS totalDebt FROM cashin WHERE category = ?", ["debt"]);
-            let othersArr = yield mysqlApi_1.default.query("SELECT SUM(amount) AS amount, category FROM others GROUP BY category");
-            let totalRevenue = (_a = revenue[0]) === null || _a === void 0 ? void 0 : _a.totalRevenue;
-            let totalDebt = (_b = debt[0]) === null || _b === void 0 ? void 0 : _b.totalDebt;
-            socket.emit("set-summary", {
-                cashin: totalCashin,
-                cashout: totalCashout,
-                totalRevenue,
-                totalDebt,
-                other: totalDebt / totalRevenue,
-                others2: othersArr,
-            });
-        }
-        catch (error) {
-            // logToFile(error);
-            console.log(error);
-        }
         // .catch((err) => logToFile(err));
     }));
     socket.on("get-others-category", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -201,23 +123,6 @@ const handleSockets = (socket) => {
             });
         }
     }));
-    socket.on("add-person", ({ name, role, email }, then) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            yield mysqlApi_1.default.insert("people", {
-                name: name.trim().toLowerCase(),
-                role: JSON.stringify(role),
-                email: email.trim(),
-                password: "123456",
-                user_id: (0, functions_1.generateUserId)(),
-            });
-            then((0, functions_1.returnSuccessSocket)());
-            (0, functions_1.broadcastToAll)(socket, yield mysqlApi_1.default.getAll("people"), "set-people");
-        }
-        catch (error) {
-            then((0, functions_1.returnErrorSocket)());
-            console.log(error);
-        }
-    }));
     socket.on("add-others-category", ({ category }) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield mysqlApi_1.default.queryString(`INSERT INTO settings (id, others_category) VALUES(1, '${JSON.stringify(category)}') ON DUPLICATE KEY UPDATE others_category = ?`, [JSON.stringify(category)]);
@@ -229,7 +134,7 @@ const handleSockets = (socket) => {
         }
     }));
     socket.on("add-task", ({ task, assignTo, priority, status, deadline, progress }, then) => __awaiter(void 0, void 0, void 0, function* () {
-        var _c, _d, _e, _f;
+        var _a, _b, _c, _d;
         try {
             yield mysqlApi_1.default.insert("tasks", {
                 task: task.toLowerCase().trim(),
@@ -239,18 +144,16 @@ const handleSockets = (socket) => {
                 deadline: deadline[1],
                 progress,
             });
-            then((0, functions_1.returnSuccessSocket)());
             (0, functions_1.broadcastToAll)(socket, yield mysqlApi_1.default.getAll("tasks"), "set-tasks");
             const emails = yield mysqlApi_1.default.queryString(`SELECT email FROM people WHERE name IN (?)`, [assignTo]);
             const mailToSend = emails.map((email) => email.email);
-            const mailResponse = yield (0, functions_1.sendEmail)("Ush Engineering Team", "Task Assigned To You", mailToSend, "testing");
-            console.log(mailResponse);
+            const mailResponse = yield (0, functions_1.sendEmail)("Ush Engineering Team", "Task Assigned To You", mailToSend, "A task has been assigned to you. Do well to check it out.");
             socket.emit("mail-response", {
-                status: mailResponse,
-                message: (_d = (_c = mailResponse.message) === null || _c === void 0 ? void 0 : _c.response) === null || _d === void 0 ? void 0 : _d.slice(0, 13),
-                to: (_f = (_e = mailResponse.message) === null || _e === void 0 ? void 0 : _e.envelope) === null || _f === void 0 ? void 0 : _f.to,
+                status: mailResponse.status,
+                message: (_b = (_a = mailResponse.message) === null || _a === void 0 ? void 0 : _a.response) === null || _b === void 0 ? void 0 : _b.slice(0, 13),
+                to: (_d = (_c = mailResponse.message) === null || _c === void 0 ? void 0 : _c.envelope) === null || _d === void 0 ? void 0 : _d.to,
             });
-            console.log("done");
+            then((0, functions_1.returnSuccessSocket)());
         }
         catch (error) {
             console.log(error);
@@ -287,32 +190,6 @@ const handleSockets = (socket) => {
         }
         catch (error) {
             console.log(error);
-        }
-    }));
-    socket.on("delete-person", ({ id }, then) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            if (id) {
-                yield mysqlApi_1.default.queryString("DELETE FROM people WHERE id = ?", [id]);
-                then((0, functions_1.returnSuccessSocket)());
-                (0, functions_1.broadcastToAll)(socket, yield mysqlApi_1.default.getAll("people"), "set-people");
-            }
-        }
-        catch (error) {
-            console.log(error);
-            then((0, functions_1.returnErrorSocket)({ message: error }));
-        }
-    }));
-    socket.on("delete-task", ({ id }, then) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            if (id) {
-                yield mysqlApi_1.default.queryString("DELETE FROM tasks WHERE id = ?", [id]);
-                then((0, functions_1.returnSuccessSocket)());
-                (0, functions_1.broadcastToAll)(socket, yield mysqlApi_1.default.getAll("tasks"), "set-tasks");
-            }
-        }
-        catch (error) {
-            console.log(error);
-            then((0, functions_1.returnErrorSocket)({ message: error }));
         }
     }));
     socket.on("delete-others", ({ id }, then) => __awaiter(void 0, void 0, void 0, function* () {

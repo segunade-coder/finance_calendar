@@ -12,6 +12,7 @@ const db_cred = {
     password: process.env.M_PASSWORD || "",
     database: process.env.M_DATABASE,
     port: parseInt(process.env.MYSQL_PORT),
+    multipleStatements: true,
 };
 // create a database connection with the credentials above
 const connection = mysql_1.default.createConnection(db_cred);

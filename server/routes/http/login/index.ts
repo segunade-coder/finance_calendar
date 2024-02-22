@@ -5,10 +5,12 @@ import {
   returnJSONSuccess,
 } from "../../../utils/functions";
 import db from "../../../utils/mysqlApi";
+import createTable from "../../../models/createTables";
 
-const routes = Router();
+const router = Router();
 
-routes.post("/", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
+  createTable();
   const { email, password } = req.body;
   const isEmpty = checkIfEmpty([{ email }, { password }]);
   if (isEmpty.length > 0) {
@@ -20,10 +22,12 @@ routes.post("/", async (req: Request, res: Response) => {
       [email, password]
     );
     if (data.length > 0) {
-      req.session.user_id = data[0]?.user_id;
       req.session.user = data[0]?.email;
-      req.session.isAdmin = data[0]?.admin;
-      return returnJSONSuccess(res, { admin: data[0]?.admin });
+      req.session.user_email = data[0]?.email;
+      req.session.isAdmin = data[0]?.admin === "true" ? true : false;
+      return returnJSONSuccess(res, {
+        admin: data[0]?.admin === "true" ? true : false,
+      });
     } else {
       returnJSONError(res, { message: "Invalid credentials provided" });
     }
@@ -32,4 +36,4 @@ routes.post("/", async (req: Request, res: Response) => {
   }
 });
 
-export { routes };
+export { router };

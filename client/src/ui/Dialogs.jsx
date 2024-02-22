@@ -5,19 +5,11 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { useState } from "react";
-import { formatList } from "../utils/functions";
 import { InputNumber } from "primereact/inputnumber";
 import { InputTextarea } from "primereact/inputtextarea";
-
-export const rolesArray = [
-  "Frontend Developer",
-  "Backend Developer",
-  "Marketer",
-  "CEO",
-  "Project Designer",
-  "UI/UX Designer",
-  "Supervisor",
-];
+import { Button } from "primereact/button";
+import { useRole } from "../components/hooks/query";
+import { useAddRole } from "../components/hooks/mutation";
 
 export const AssignIndividualTask = ({
   showModal,
@@ -91,45 +83,118 @@ export const CreatePerson = ({
   setRole,
   setEmail,
 }) => {
+  const { data, isLoading, isError } = useRole();
+  const [showAddRole, setShowAddRole] = useState(false);
+  const [addRole, setAddRole] = useState("");
+  const addRoleMutation = useAddRole(role);
+  const addRoleFnc = () => {
+    if (addRole && addRole !== "") {
+      addRoleMutation.mutate(addRole);
+      setAddRole("");
+    }
+  };
+  const modalFooterContent = (
+    <div>
+      <Button
+        label="Cancel"
+        icon="pi pi-times"
+        onClick={() => showAddRole(false)}
+        className="p-button-text"
+        size="small"
+      />
+      <Button
+        label="Add"
+        icon="pi pi-check-circle"
+        onClick={() => addRoleFnc()}
+        autoFocus
+        size="small"
+        loading={addRoleMutation.isPending}
+      />
+    </div>
+  );
   return (
-    <Dialog
-      header="Add Person"
-      visible={showModal}
-      onHide={() => setShowModal(false)}
-      style={{ width: "30vw" }}
-      footer={footer}
-      breakpoints={{ "960px": "75vw", "641px": "100vw" }}
-    >
-      <div className="event-card">
-        <span className="p-float-label">
-          <InputText
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <label htmlFor="desc">Name</label>
-        </span>
-        <span className="p-float-label">
-          <InputText
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            keyfilter="email"
-          />
-          <label htmlFor="desc">Email Address</label>
-        </span>
-        <span className="p-float-label">
-          <MultiSelect
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.value)}
-            options={rolesArray}
-            display="chip"
-          />
-          <label htmlFor="desc">Role</label>
-        </span>
-      </div>
-    </Dialog>
+    <>
+      <AddOptopions
+        title={"Add Role"}
+        showModal={showAddRole}
+        setShowModal={setShowAddRole}
+        addOption={addRole}
+        footerContent={modalFooterContent}
+        setAddOption={setAddRole}
+      />
+      <Dialog
+        header="Add Person"
+        visible={showModal}
+        onHide={() => setShowModal(false)}
+        style={{ width: "30vw" }}
+        footer={footer}
+        breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+      >
+        <div className="event-card">
+          <span className="p-float-label">
+            <InputText
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <label htmlFor="desc">Name</label>
+          </span>
+          <span className="p-float-label">
+            <InputText
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              keyfilter="email"
+            />
+            <label htmlFor="desc">Email Address</label>
+          </span>
+          <div
+            className="flex"
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            {isError ? (
+              <div>Failed to fetch</div>
+            ) : (
+              <>
+                <span className="p-float-label" style={{ width: "100%" }}>
+                  <MultiSelect
+                    id="role"
+                    value={role}
+                    onChange={(e) => setRole(e.value)}
+                    options={
+                      isLoading
+                        ? isError
+                          ? []
+                          : []
+                        : data
+                        ? JSON.parse(data)
+                        : []
+                    }
+                    display="chip"
+                    disabled={isLoading}
+                  />
+                  <label htmlFor="desc">
+                    {isLoading ? "Loading..." : "Role"}
+                  </label>
+                </span>
+
+                <Button
+                  icon="pi pi-plus"
+                  text
+                  className="p-button-rounded no-shadow"
+                  severity="secondary"
+                  onClick={() => setShowAddRole(true)}
+                  loading={isLoading}
+                ></Button>
+              </>
+            )}
+          </div>
+        </div>
+      </Dialog>
+    </>
   );
 };
 
@@ -148,6 +213,10 @@ export const CreateTask = ({
   people,
 }) => {
   const peopleTemplate = (people) => {
+    const formatter = new Intl.ListFormat("en-GB", {
+      style: "narrow",
+      type: "conjunction",
+    });
     return (
       <div>
         <p style={{ margin: 0, textTransform: "capitalize" }}>{people.name}</p>
@@ -155,7 +224,7 @@ export const CreateTask = ({
           className="p-card-subtitle"
           style={{ margin: 0, textTransform: "capitalize" }}
         >
-          {formatList(people.role)}
+          {formatter.format(JSON.parse(people.role))}
         </small>
       </div>
     );
@@ -303,6 +372,36 @@ export const SummaryBreakdown = ({
           <span>{details[props].toLocaleString()}</span>
         </span>
       ))}
+    </Dialog>
+  );
+};
+export const AddOptopions = ({
+  showModal,
+  setShowModal,
+  footerContent,
+  addOption,
+  setAddOption,
+  title,
+}) => {
+  return (
+    <Dialog
+      header={title ? title : "Add"}
+      visible={showModal}
+      onHide={() => setShowModal(false)}
+      style={{ width: "30vw" }}
+      footer={footerContent}
+      breakpoints={{ "960px": "75vw", "641px": "100vw" }}
+    >
+      <div className="cashin-card">
+        <span className="p-float-label" style={{ marginTop: "0.5rem" }}>
+          <InputText
+            id="addCateg"
+            value={addOption}
+            onChange={(e) => setAddOption(e.target.value)}
+          />
+          <label htmlFor="amount">{title}</label>
+        </span>
+      </div>
     </Dialog>
   );
 };

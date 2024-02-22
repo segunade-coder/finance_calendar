@@ -9,80 +9,25 @@ import {
   returnSuccessSocket,
   sendEmail,
 } from "../../utils/functions";
-
+const emailStatus: any[] = [];
 const handleSockets = (socket: Socket) => {
   createTable();
   const req = socket.request as Request;
-
   socket.on("disconnect", (user) => {
     //   logToFile("disconnect");
   });
 
   socket.on("check-status", () => {
     socket.emit("status", {
-      user_id: req.session.user_id,
+      user_id: req.session.user_email,
       user: req.session.user,
       admin: req.session.isAdmin,
     });
   });
+  socket.on("get-mailStatus", () => {
+    socket.emit("mail-response", {});
+  });
 
-  socket.on("get-cashin", async () => {
-    try {
-      const data = await db.getAll("cashin");
-      socket.emit("set-cashin", { data });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  socket.on("get-cashout", async () => {
-    try {
-      const data = await db.getAll("cashout");
-      socket.emit("set-cashout", { data });
-    } catch (error) {
-      // logToFile(error);
-      console.log(error);
-    }
-  });
-  socket.on("get-people", async () => {
-    try {
-      const data = await db.getAll("people");
-      socket.emit("set-people", { data });
-    } catch (error) {
-      // logToFile(error);
-      console.log(error);
-    }
-  });
-  socket.on("get-person", async (id) => {
-    try {
-      const data = await db.queryString(
-        "SELECT * FROM people WHERE user_id = ?",
-        [id]
-      );
-      socket.emit("set-person", { data });
-    } catch (error) {
-      // logToFile(error);
-    }
-  });
-  // route to get individual tasks
-  socket.on("get-task", async (id) => {
-    try {
-      const data = await db.queryString("SELECT * FROM tasks WHERE id = ?", [
-        id,
-      ]);
-      socket.emit("set-task", { data });
-    } catch (error) {
-      // logToFile(error);
-    }
-  });
-  socket.on("get-tasks", async () => {
-    try {
-      const data = await db.getAll("tasks");
-      socket.emit("set-tasks", { data });
-    } catch (error) {
-      // logToFile(error);
-      console.log(error);
-    }
-  });
   socket.on("get-others", async () => {
     try {
       const data = await db.getAll("others");
@@ -93,38 +38,6 @@ const handleSockets = (socket: Socket) => {
     }
   });
   socket.on("get-summary", async () => {
-    try {
-      const totalCashin = await db.query(
-        `SELECT SUM(amount) AS cashin, category FROM cashin GROUP BY category`
-      );
-      const totalCashout = await db.query(
-        "SELECT SUM(amount) AS cashout, category FROM cashout GROUP BY category"
-      );
-      let revenue = await db.queryString(
-        "SELECT SUM(amount) AS totalRevenue FROM cashin WHERE category = ?",
-        ["revenue"]
-      );
-      let debt = await db.queryString(
-        "SELECT SUM(amount) AS totalDebt FROM cashin WHERE category = ?",
-        ["debt"]
-      );
-      let othersArr = await db.query(
-        "SELECT SUM(amount) AS amount, category FROM others GROUP BY category"
-      );
-      let totalRevenue = revenue[0]?.totalRevenue;
-      let totalDebt = debt[0]?.totalDebt;
-      socket.emit("set-summary", {
-        cashin: totalCashin,
-        cashout: totalCashout,
-        totalRevenue,
-        totalDebt,
-        other: totalDebt / totalRevenue,
-        others2: othersArr,
-      });
-    } catch (error) {
-      // logToFile(error);
-      console.log(error);
-    }
     // .catch((err) => logToFile(err));
   });
   socket.on("get-others-category", async () => {
@@ -202,22 +115,7 @@ const handleSockets = (socket: Socket) => {
         });
     }
   });
-  socket.on("add-person", async ({ name, role, email }, then) => {
-    try {
-      await db.insert("people", {
-        name: name.trim().toLowerCase(),
-        role: JSON.stringify(role),
-        email: email.trim(),
-        password: "123456",
-        user_id: generateUserId(),
-      });
-      then(returnSuccessSocket());
-      broadcastToAll(socket, await db.getAll("people"), "set-people");
-    } catch (error) {
-      then(returnErrorSocket());
-      console.log(error);
-    }
-  });
+
   socket.on("add-others-category", async ({ category }) => {
     try {
       await db.queryString(
@@ -245,7 +143,6 @@ const handleSockets = (socket: Socket) => {
           progress,
         });
 
-        then(returnSuccessSocket());
         broadcastToAll(socket, await db.getAll("tasks"), "set-tasks");
         const emails = await db.queryString(
           `SELECT email FROM people WHERE name IN (?)`,
@@ -258,15 +155,14 @@ const handleSockets = (socket: Socket) => {
           "Ush Engineering Team",
           "Task Assigned To You",
           mailToSend,
-          "testing"
+          "A task has been assigned to you. Do well to check it out."
         );
-        console.log(mailResponse);
         socket.emit("mail-response", {
-          status: mailResponse,
+          status: mailResponse.status,
           message: mailResponse.message?.response?.slice(0, 13),
           to: mailResponse.message?.envelope?.to,
         });
-        console.log("done");
+        then(returnSuccessSocket());
       } catch (error) {
         console.log(error);
         then(returnErrorSocket({ message: "Something went wrong. Try again" }));
@@ -312,30 +208,6 @@ const handleSockets = (socket: Socket) => {
       }
     }
   );
-  socket.on("delete-person", async ({ id }, then) => {
-    try {
-      if (id) {
-        await db.queryString("DELETE FROM people WHERE id = ?", [id]);
-        then(returnSuccessSocket());
-        broadcastToAll(socket, await db.getAll("people"), "set-people");
-      }
-    } catch (error) {
-      console.log(error);
-      then(returnErrorSocket({ message: error }));
-    }
-  });
-  socket.on("delete-task", async ({ id }, then) => {
-    try {
-      if (id) {
-        await db.queryString("DELETE FROM tasks WHERE id = ?", [id]);
-        then(returnSuccessSocket());
-        broadcastToAll(socket, await db.getAll("tasks"), "set-tasks");
-      }
-    } catch (error) {
-      console.log(error);
-      then(returnErrorSocket({ message: error }));
-    }
-  });
   socket.on("delete-others", async ({ id }, then) => {
     try {
       if (id) {

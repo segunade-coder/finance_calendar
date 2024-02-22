@@ -2,9 +2,10 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import logo from "../../assets/logo.png";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/GlobalContext";
 const Login = () => {
   const url = "http://localhost:3000";
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ const Login = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
   const errorStyle = (ref, dif = false) => {
     if (dif) {
       ref = ref.current.getInput();
@@ -58,8 +60,11 @@ const Login = () => {
         const data = await resp.json();
         if (data.status) {
           toast(data.message);
-          console.log(data.admin);
-          data.admin === "true" ? navigate("/a") : navigate("/u");
+          setUser({
+            loggedIn: true,
+            admin: data.admin,
+          });
+          data.admin ? navigate("/a") : navigate("/u");
           // navigate("/");
         } else {
           toast.error(data.message);

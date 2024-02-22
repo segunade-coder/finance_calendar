@@ -1,6 +1,7 @@
 import mysql, { Connection } from "mysql";
 import { cash, settings, people, tasks } from "../types";
 import connection from "../configs/db";
+import { convertToString, formatTimeAgo } from "./functions";
 type TableType = string;
 class dbQueries {
   connection: Connection;
@@ -60,7 +61,7 @@ class dbQueries {
       });
     });
   };
-  queryString = (query: string, options: any = []): Promise<any[]> => {
+  queryString = (query: string, options: any[] = []): Promise<any[]> => {
     return new Promise((resolve, reject) => {
       this.connection.query(query, options, (err, data) => {
         err ? reject(err.sqlMessage) : resolve(data);
@@ -124,7 +125,7 @@ class dbQueries {
   //   });
   // };
   delete = (table: string, id: string) => {
-    if (typeof id !== "number" && table !== "string") {
+    if (typeof id !== "number" && typeof table !== "string") {
       return new Promise((resolve, reject) =>
         reject(new SyntaxError("Must be of type 'string'"))
       );
@@ -156,6 +157,44 @@ class dbQueries {
       )}) VALUES(${valueArray.join(", ")})`;
       this.connection.query(sql, (err, data) => {
         err ? reject(err) : resolve(data);
+      });
+    });
+  };
+  getDataForMail = (): Promise<Array<tasks[] | []>> => {
+    const currentDate = new Date();
+    const inTwoWeeks = new Date(currentDate);
+    const inOneWeeks = new Date(currentDate);
+    const inTwoDays = new Date(currentDate);
+    const inOneDay = new Date(currentDate);
+    inTwoWeeks.setDate(currentDate.getDate() + 15);
+    inOneWeeks.setDate(currentDate.getDate() + 8);
+    inTwoDays.setDate(currentDate.getDate() + 3);
+    inOneDay.setDate(currentDate.getDate() + 1);
+    return new Promise((resolve, reject) => {
+      const sql: string = `SELECT id, task, assignTo, deadline FROM tasks WHERE WEEK(DATE(deadline)) = WEEK(DATE('${convertToString(
+        inTwoWeeks
+      )}')) AND (sentMail = '' OR sentMail = 0) AND status != 2;SELECT id, task, assignTo, deadline FROM tasks WHERE WEEK(DATE(deadline)) = WEEK(DATE('${convertToString(
+        inOneWeeks
+      )}')) AND (sentMail = '' OR sentMail = 0 OR sentMail = 1) AND status != 2;SELECT id, task, assignTo, deadline FROM tasks WHERE DATE(deadline) BETWEEN DATE('${convertToString(
+        inOneDay
+      )}') AND DATE('${convertToString(
+        inTwoDays
+      )}') AND (sentMail = '' OR sentMail = 0 OR sentMail = 2) AND status != 2`;
+      this.connection.query(sql, (err, data) => {
+        err ? reject(err) : resolve(data);
+      });
+    });
+  };
+  changeMailStatus = (id: number, status: number) => {
+    if (typeof id !== "number" && typeof status !== "string") {
+      return new Promise((resolve, reject) =>
+        reject(new SyntaxError("Must be of type 'string'"))
+      );
+    }
+    return new Promise((resolve, reject) => {
+      let sql = `UPDATE tasks SET sentMail = ? WHERE id = ?`;
+      this.connection.query(sql, [status, id], (err, data) => {
+        err ? reject(err.sqlMessage) : resolve(data);
       });
     });
   };

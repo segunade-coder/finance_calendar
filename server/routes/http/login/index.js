@@ -12,14 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.routes = void 0;
+exports.router = void 0;
 const express_1 = require("express");
 const functions_1 = require("../../../utils/functions");
 const mysqlApi_1 = __importDefault(require("../../../utils/mysqlApi"));
-const routes = (0, express_1.Router)();
-exports.routes = routes;
-routes.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createTables_1 = __importDefault(require("../../../models/createTables"));
+const router = (0, express_1.Router)();
+exports.router = router;
+router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
+    (0, createTables_1.default)();
     const { email, password } = req.body;
     const isEmpty = (0, functions_1.checkIfEmpty)([{ email }, { password }]);
     if (isEmpty.length > 0) {
@@ -28,10 +30,12 @@ routes.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield mysqlApi_1.default.queryString(`SELECT user_id, admin, email FROM people WHERE email = ? AND password = ?`, [email, password]);
         if (data.length > 0) {
-            req.session.user_id = (_a = data[0]) === null || _a === void 0 ? void 0 : _a.user_id;
-            req.session.user = (_b = data[0]) === null || _b === void 0 ? void 0 : _b.email;
-            req.session.isAdmin = (_c = data[0]) === null || _c === void 0 ? void 0 : _c.admin;
-            return (0, functions_1.returnJSONSuccess)(res, { admin: (_d = data[0]) === null || _d === void 0 ? void 0 : _d.admin });
+            req.session.user = (_a = data[0]) === null || _a === void 0 ? void 0 : _a.email;
+            req.session.user_email = (_b = data[0]) === null || _b === void 0 ? void 0 : _b.email;
+            req.session.isAdmin = ((_c = data[0]) === null || _c === void 0 ? void 0 : _c.admin) === "true" ? true : false;
+            return (0, functions_1.returnJSONSuccess)(res, {
+                admin: ((_d = data[0]) === null || _d === void 0 ? void 0 : _d.admin) === "true" ? true : false,
+            });
         }
         else {
             (0, functions_1.returnJSONError)(res, { message: "Invalid credentials provided" });

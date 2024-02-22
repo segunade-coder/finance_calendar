@@ -16,12 +16,16 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <Router>
       <div className="app">
         <Routes>
           <Route path="" element={<Navigate to="login" />} />
+          <Route path="login" element={<Login />} />
+          {/* admin routes */}
+          {/* <Route element={<ProtectedRoute />}> */}
           <Route path="a" element={<Main />}>
             <Route path="" element={<Navigate to="events" />} />
             <Route
@@ -86,7 +90,9 @@ function App() {
               />
             </Route>
           </Route>
-          <Route path="login" element={<Login />} />
+          {/* user routes */}
+          <Route path="events" element={<div>normal user routes</div>} />
+          {/* </Route> */}
         </Routes>
       </div>
     </Router>

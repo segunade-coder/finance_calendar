@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mysql_1 = __importDefault(require("mysql"));
 const db_1 = __importDefault(require("../configs/db"));
+const functions_1 = require("./functions");
 class dbQueries {
     constructor(connection) {
         this.createTable = (table, ...params) => {
@@ -97,7 +98,7 @@ class dbQueries {
         //   });
         // };
         this.delete = (table, id) => {
-            if (typeof id !== "number" && table !== "string") {
+            if (typeof id !== "number" && typeof table !== "string") {
                 return new Promise((resolve, reject) => reject(new SyntaxError("Must be of type 'string'")));
             }
             return new Promise((resolve, reject) => {
@@ -123,6 +124,34 @@ class dbQueries {
                 let sql = `INSERT INTO ${table} (${keyArray.join(", ")}) VALUES(${valueArray.join(", ")})`;
                 this.connection.query(sql, (err, data) => {
                     err ? reject(err) : resolve(data);
+                });
+            });
+        };
+        this.getDataForMail = () => {
+            const currentDate = new Date();
+            const inTwoWeeks = new Date(currentDate);
+            const inOneWeeks = new Date(currentDate);
+            const inTwoDays = new Date(currentDate);
+            const inOneDay = new Date(currentDate);
+            inTwoWeeks.setDate(currentDate.getDate() + 15);
+            inOneWeeks.setDate(currentDate.getDate() + 8);
+            inTwoDays.setDate(currentDate.getDate() + 3);
+            inOneDay.setDate(currentDate.getDate() + 1);
+            return new Promise((resolve, reject) => {
+                const sql = `SELECT id, task, assignTo, deadline FROM tasks WHERE WEEK(DATE(deadline)) = WEEK(DATE('${(0, functions_1.convertToString)(inTwoWeeks)}')) AND (sentMail = '' OR sentMail = 0) AND status != 2;SELECT id, task, assignTo, deadline FROM tasks WHERE WEEK(DATE(deadline)) = WEEK(DATE('${(0, functions_1.convertToString)(inOneWeeks)}')) AND (sentMail = '' OR sentMail = 0 OR sentMail = 1) AND status != 2;SELECT id, task, assignTo, deadline FROM tasks WHERE DATE(deadline) BETWEEN DATE('${(0, functions_1.convertToString)(inOneDay)}') AND DATE('${(0, functions_1.convertToString)(inTwoDays)}') AND (sentMail = '' OR sentMail = 0 OR sentMail = 2) AND status != 2`;
+                this.connection.query(sql, (err, data) => {
+                    err ? reject(err) : resolve(data);
+                });
+            });
+        };
+        this.changeMailStatus = (id, status) => {
+            if (typeof id !== "number" && typeof status !== "string") {
+                return new Promise((resolve, reject) => reject(new SyntaxError("Must be of type 'string'")));
+            }
+            return new Promise((resolve, reject) => {
+                let sql = `UPDATE tasks SET sentMail = ? WHERE id = ?`;
+                this.connection.query(sql, [status, id], (err, data) => {
+                    err ? reject(err.sqlMessage) : resolve(data);
                 });
             });
         };

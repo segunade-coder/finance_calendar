@@ -1,14 +1,15 @@
-import mysql from "mysql";
+import mysql, { ConnectionConfig } from "mysql";
 import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 import { Database } from "../types";
 
-const db_cred: Database = {
+const db_cred: ConnectionConfig = {
   host: process.env.M_HOST as string,
   user: process.env.M_USERNAME as string,
   password: (process.env.M_PASSWORD as string) || "",
   database: process.env.M_DATABASE as string,
   port: parseInt(process.env.MYSQL_PORT as string),
+  multipleStatements: true,
 };
 
 // create a database connection with the credentials above

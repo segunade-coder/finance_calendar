@@ -103,3 +103,33 @@ export const checkIfEmpty = (values) => {
 };
 export const dateExpired = (date) =>
   new Date(date).valueOf() < new Date(Date.now()).valueOf() ? true : false;
+export const getStatus = (id) => {
+  id = parseInt(id);
+  switch (id) {
+    case 0:
+      return "Pending";
+    case 1:
+      return "Stuck";
+    case 2:
+      return "Done";
+    case 3:
+      return "Working on";
+
+    default:
+      return "Pending";
+  }
+};
+export const getStatusNumber = (id) => {
+  switch (id) {
+    case "Pending":
+      return 0;
+    case "Stuck":
+      return 1;
+    case "Done":
+      return 2;
+    case "Working on":
+      return 3;
+    default:
+      return 0;
+  }
+};
