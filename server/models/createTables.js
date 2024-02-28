@@ -108,9 +108,9 @@ const createTable = () => __awaiter(void 0, void 0, void 0, function* () {
             dataTypeLength: "50",
         }, {
             columnName: "adminApprove",
-            dataType: "varchar",
+            dataType: "INT",
             condition: "NOT NULL",
-            dataTypeLength: "20",
+            dataTypeLength: "11",
         }, {
             columnName: "comments",
             dataType: "JSON",

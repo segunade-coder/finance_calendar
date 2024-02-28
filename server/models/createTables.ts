@@ -124,9 +124,9 @@ const createTable = async () => {
       },
       {
         columnName: "adminApprove",
-        dataType: "varchar",
+        dataType: "INT",
         condition: "NOT NULL",
-        dataTypeLength: "20",
+        dataTypeLength: "11",
       },
       {
         columnName: "comments",

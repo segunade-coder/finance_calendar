@@ -36,10 +36,27 @@ router.get("/cashout", (req, res) => __awaiter(void 0, void 0, void 0, function*
         (0, functions_1.returnJSONError)(res, { error }, 500);
     }
 }));
-router.get("/people", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/all-people", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield mysqlApi_1.default.getAll("people");
         res.json({ data });
+    }
+    catch (error) {
+        res.json(error);
+    }
+}));
+router.get("/people", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { _page, _limit } = req.query;
+    // @ts-ignore
+    const offset = (parseInt(_page) - 1) * parseInt(_limit);
+    try {
+        const [count, data] = yield mysqlApi_1.default.query(`SELECT COUNT(id) AS total FROM people;SELECT * FROM people LIMIT ${_limit} OFFSET ${offset}`);
+        res.json({
+            data,
+            hasMore: 
+            // @ts-ignore
+            Math.ceil(count[0]["total"] / parseInt(_limit)) !== parseInt(_page),
+        });
     }
     catch (error) {
         res.json(error);
@@ -58,9 +75,18 @@ router.get("/person", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 router.get("/tasks", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { _page, _limit } = req.query;
+    // @ts-ignore
+    const offset = (parseInt(_page) - 1) * parseInt(_limit);
     try {
-        const data = yield mysqlApi_1.default.getAll("tasks");
-        res.json({ data });
+        const [count, countNotApproved, data] = yield mysqlApi_1.default.query(`SELECT COUNT(id) AS total FROM tasks;SELECT COUNT(id) AS totalNotApproved FROM tasks WHERE status = 2 AND adminApprove = 0;SELECT * FROM tasks LIMIT ${_limit} OFFSET ${offset}`);
+        res.json({
+            data,
+            hasMore: 
+            // @ts-ignore
+            Math.ceil(count[0]["total"] / parseInt(_limit)) !== parseInt(_page),
+            notApproved: countNotApproved[0]["totalNotApproved"],
+        });
     }
     catch (error) {
         res.json(error);
@@ -75,6 +101,17 @@ router.get("/task", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             ]);
             res.json({ data });
         }
+    }
+    catch (error) {
+        console.log(error);
+        (0, functions_1.returnJSONError)(res, {}, 500);
+        // logToFile(error);
+    }
+}));
+router.get("/not-approved", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield mysqlApi_1.default.query("SELECT * FROM tasks WHERE status = 2 AND adminApprove = 0");
+        res.json({ data });
     }
     catch (error) {
         console.log(error);
@@ -133,6 +170,20 @@ router.post("/create-person", (req, res) => __awaiter(void 0, void 0, void 0, fu
         console.log(error);
     }
 }));
+router.put("/person", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, value } = req.body;
+        yield mysqlApi_1.default.queryString("UPDATE people SET role = ? WHERE id = ?", [
+            JSON.stringify(value),
+            id,
+        ]);
+        (0, functions_1.returnJSONSuccess)(res);
+    }
+    catch (error) {
+        console.log(error);
+        (0, functions_1.returnJSONError)(res, {}, 500);
+    }
+}));
 router.delete("/person", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.query;
@@ -176,5 +227,25 @@ router.post("/add-role", (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     catch (error) {
         console.log(error);
+    }
+}));
+router.put("/task", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { task, assignTo, deadline, status, progress, priority, id } = req.body;
+        if (id) {
+            yield mysqlApi_1.default.queryString(`UPDATE tasks SET task = ?, assignTo = ?, deadline = ?, status = ?, progress = ?, priority = ? WHERE id = ?`, [
+                task,
+                JSON.stringify(assignTo),
+                deadline,
+                status,
+                progress,
+                priority,
+                id,
+            ]);
+            (0, functions_1.returnJSONSuccess)(res);
+        }
+    }
+    catch (error) {
+        (0, functions_1.returnJSONError)(res, {}, 500);
     }
 }));

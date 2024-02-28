@@ -180,34 +180,6 @@ const handleSockets = (socket: Socket) => {
       console.log(error);
     }
   });
-  socket.on(
-    "update-task",
-    async (
-      { id, task, assignTo, deadline, status, progress, priority },
-      then
-    ) => {
-      try {
-        if (id) {
-          await db.queryString(
-            `UPDATE tasks SET task = ?, assignTo = ?, deadline = ?, status = ?, progress = ?, priority = ? WHERE id = ?`,
-            [
-              task,
-              JSON.stringify(assignTo),
-              deadline,
-              status,
-              progress,
-              priority,
-              id,
-            ]
-          );
-          then(returnSuccessSocket());
-          broadcastToAll(socket, await db.getAll("tasks"), "set-tasks");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  );
   socket.on("delete-others", async ({ id }, then) => {
     try {
       if (id) {

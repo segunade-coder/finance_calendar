@@ -31,3 +31,34 @@ no data to run , on Thursday, February 22, 2024 at 12:17:58 PM PST
 no data to run , on Thursday, February 22, 2024 at 12:18:58 PM PST
 no data to run , on Thursday, February 22, 2024 at 12:20:57 PM PST
 no data to run , on Thursday, February 22, 2024 at 12:22:04 PM PST
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Monday, February 26, 2024 at 10:34:20 PM GMT+1
+Failed to send mail with status number 2 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Monday, February 26, 2024 at 10:34:20 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Monday, February 26, 2024 at 11:19:20 PM GMT+1
+Failed to send mail with status number 2 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Monday, February 26, 2024 at 11:19:20 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 12:09:24 AM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 7:02:16 AM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 7:19:49 AM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 4:19:25 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 4:19:50 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 4:30:56 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 5:44:41 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:21:21 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:32:04 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:40:48 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:43:34 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:44:56 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:46:27 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:48:23 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:50:12 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:51:43 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 6:51:54 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 8:12:39 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 8:38:46 PM GMT+1
+Failed to send mail with status number 3 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 8:39:31 PM GMT+1
+Mail sent successfully with status number 3 , on Tuesday, February 27, 2024 at 10:00:15 PM GMT+1
+no data to run , on Tuesday, February 27, 2024 at 3:20:21 PM GMT+1
+no data to run , on Tuesday, February 27, 2024 at 3:20:24 PM GMT+1
+no data to run , on Tuesday, February 27, 2024 at 3:46:41 PM GMT+1
+no data to run , on Tuesday, February 27, 2024 at 3:48:28 PM GMT+1
+no data to run , on Tuesday, February 27, 2024 at 4:20:48 PM GMT+1
+Failed to send mail with status number 2 Error is Error: getaddrinfo ENOTFOUND smtp.gmail.com , on Tuesday, February 27, 2024 at 4:46:21 PM GMT+1

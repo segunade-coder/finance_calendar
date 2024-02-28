@@ -2,28 +2,34 @@
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { MultiSelect } from "primereact/multiselect";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { MainContext } from "../../../utils/Helper";
 import { formatList } from "../../../utils/functions";
-import { rolesArray } from "../../../ui/Dialogs";
+
+import { useQueryClient } from "@tanstack/react-query";
+import { useRole } from "../../hooks/query";
+import { useUpdatePerson } from "../../hooks/mutation";
 const SinglePerson = () => {
+  const queryClient = useQueryClient();
   const id = useRef(null);
+  const { data, isLoading, isError } = useRole();
   const [person, setPerson] = useState([]);
   const navigate = useNavigate();
   const [role, setRole] = useState([]);
-  const { io } = useContext(MainContext);
+  const updatePersonMutation = useUpdatePerson();
   const [loading, setLoading] = useState(false);
   id.current = useParams().id;
 
   useEffect(() => {
     setLoading(true);
-    io.emit("get-person", id.current);
-    io.on("set-person", ({ data }) => {
-      setPerson(data);
-      setRole(JSON.parse(data[0]?.role || []));
-      setLoading(false);
-    });
+    const tempPeople = [
+      queryClient
+        .getQueryData(["people"])
+        ?.find((person) => person.user_id === id.current),
+    ];
+    setPerson(() => tempPeople);
+    tempPeople !== undefined && setRole(JSON.parse(tempPeople[0]?.role || []));
+    setLoading(false);
   }, [id.current]);
 
   const changeRole = (value) => {
@@ -31,7 +37,7 @@ const SinglePerson = () => {
     newPerson.role = JSON.stringify(value);
     setPerson([newPerson]);
     setRole(value);
-    io.emit("update-person", { id: person[0]?.id, value });
+    updatePersonMutation.mutate({ id: person[0]?.id, value });
   };
 
   return (
@@ -66,8 +72,17 @@ const SinglePerson = () => {
                   id="role"
                   value={role}
                   onChange={(e) => changeRole(e.value)}
-                  options={rolesArray}
+                  options={
+                    isLoading
+                      ? isError
+                        ? []
+                        : []
+                      : data
+                      ? JSON.parse(data)
+                      : []
+                  }
                   display="chip"
+                  disabled={isLoading}
                 />
               </div>
             </div>

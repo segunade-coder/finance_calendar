@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Slider } from "primereact/slider";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Rating } from "primereact/rating";
 import { Calendar } from "primereact/calendar";
-import { MainContext } from "../../../utils/Helper.js";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -20,19 +19,15 @@ import {
   statusFormat,
 } from "../../../utils/functions.js";
 import { InputTextarea } from "primereact/inputtextarea";
+import { useUpdateTask } from "../../hooks/mutation.js";
+import { useTask } from "../../hooks/query.js";
 
 const SingleEvent = () => {
   const id = useRef(null);
   id.current = useParams().id;
   const queryClient = useQueryClient();
 
-  const [task, setTask] = useState(() => [
-    queryClient
-      .getQueryData(["tasks"])
-      ?.find((task) => task.id === parseInt(id.current)),
-  ]);
-
-  const { io } = useContext(MainContext);
+  const updateTaskMutation = useUpdateTask();
   const navigate = useNavigate();
   const [updateTask, setUpdateTask] = useState("");
   const [updateStatus, setUpdateStatus] = useState("");
@@ -42,29 +37,26 @@ const SingleEvent = () => {
   const [progress, setProgress] = useState(0);
   const [priority, setPriority] = useState(0);
   const [deadline, setDeadline] = useState("");
-
+  const { data, isLoading, isError } = useTask(id.current);
   useEffect(() => {
-    const tempTask = [
-      queryClient
-        .getQueryData(["tasks"])
-        ?.find((task) => task.id === parseInt(id.current)),
-    ];
-    setTask(() => tempTask);
-    setUpdateTask(tempTask[0]?.task);
-    setUpdateStatus(getStatus(tempTask[0]?.status));
-    setStatusText(getStatus(tempTask[0]?.status));
-    setStatusText(tempTask[0]?.status);
-    setProgress(tempTask[0]?.progress);
-    setAssignTo(JSON.parse(tempTask[0]?.assignTo));
-    setPriority(tempTask[0]?.priority);
-    setDeadline(new Date(tempTask[0]?.deadline));
-  }, [id.current]);
+    if (data) {
+      setUpdateTask(data[0]?.task);
+      setUpdateStatus(getStatus(data[0]?.status));
+      setStatusText(getStatus(data[0]?.status));
+      setStatusText(data[0]?.status);
+      setProgress(data[0]?.progress);
+      setAssignTo(JSON.parse(data[0]?.assignTo));
+      setPriority(data[0]?.priority);
+      setDeadline(new Date(data[0]?.deadline));
+    }
+  }, [data]);
 
   const peopleTemplate = (people) => {
     const formatter = new Intl.ListFormat("en-GB", {
       style: "narrow",
       type: "conjunction",
     });
+
     return (
       <div>
         <p style={{ margin: 0, textTransform: "capitalize" }}>{people.name}</p>
@@ -87,23 +79,15 @@ const SingleEvent = () => {
     if (isEmpty.length > 0) {
       toast.error(isEmpty[0], { id: "update" });
     } else {
-      io.volatile.emit(
-        "update-task",
-        {
-          id: task[0]?.id,
-          task: updateTask,
-          assignTo,
-          priority,
-          status: getStatusNumber(updateStatus),
-          deadline,
-          progress,
-        },
-        (res) => {
-          if (res.status) {
-            toast.success("Update completed", { id: "update" });
-          }
-        }
-      );
+      updateTaskMutation.mutate({
+        id: data[0]?.id,
+        task: updateTask,
+        assignTo,
+        priority,
+        status: getStatusNumber(updateStatus),
+        deadline,
+        progress,
+      });
     }
   };
   const setUpdateStatusFnc = (val) => {
@@ -124,7 +108,11 @@ const SingleEvent = () => {
           <p>Edit Task</p>
         </div>
       </div>
-      {task.length > 0 ? (
+      {isLoading ? (
+        <div className="fallback-loading">Loading...</div>
+      ) : isError ? (
+        <div className="fallback-loading">Error fetching Task</div>
+      ) : data.length > 0 ? (
         <div className="s-event-cont">
           <div className="p-card-body" style={{ padding: "0.5rem 0.5rem" }}>
             <div>

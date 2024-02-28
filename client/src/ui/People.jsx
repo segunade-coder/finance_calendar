@@ -8,8 +8,8 @@ import Person from "./Person";
 import { useAddPerson } from "../components/hooks/mutation";
 
 const People = () => {
-  const { data, isLoading: isLoadingPeople, isError } = usePeople();
-  const [people, setPeople] = useState([]);
+  const [page, setPage] = useState(1);
+  const [people, setPeople] = useState(null);
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
@@ -18,8 +18,14 @@ const People = () => {
   const [visible3, setVisible3] = useState(false);
   const [filter, setFilter] = useState("");
   const addPersonMutation = useAddPerson();
+  const {
+    data,
+    isPending: isLoadingPeople,
+    isError,
+    isPlaceholderData,
+  } = usePeople(page);
   useEffect(() => {
-    setPeople(data);
+    setPeople(data?.data);
   }, [data]);
   const addIndTask = (name) => {
     let peep = people.find(
@@ -85,13 +91,12 @@ const People = () => {
       setPeople(people);
     } else {
       setPeople(
-        data.filter(({ name }) =>
+        data.data.filter(({ name }) =>
           name.toLowerCase().match(value.toLowerCase().trim())
         )
       );
     }
   };
-  if (isError) return <div>Error</div>;
   return (
     <div className="people">
       <div className="people-action">
@@ -118,15 +123,46 @@ const People = () => {
       <div className="people-card">
         {isLoadingPeople && !people ? (
           <div>Loading</div>
-        ) : people?.length > 0 ? (
-          people.map((person, index) => (
-            <Person
-              person={person}
-              i={index}
-              key={index + person.name}
-              addIndTask={addIndTask}
-            />
-          ))
+        ) : isError ? (
+          <div className="fallback-loading">Error fetching</div>
+        ) : people && people?.length > 0 ? (
+          <>
+            {people.map((person, index) => (
+              <Person
+                person={person}
+                i={index}
+                key={index + person.name}
+                addIndTask={addIndTask}
+              />
+            ))}
+            <div className="pagination">
+              {/* <span>page {page}</span> */}
+              <Button
+                // label="Prev"
+                icon="pi pi-angle-left"
+                // size="small"
+                onClick={() => setPage((old) => Math.max(old - 1, 1))}
+                // iconPos="right"
+                disabled={page === 1}
+                text
+                className="no-shadow p-button-rounded"
+              />
+              <Button
+                // loading={queryTasks.isFetching}
+                icon="pi pi-angle-right"
+                // size="small"
+                onClick={() => {
+                  if (!isPlaceholderData && data?.hasMore) {
+                    setPage((old) => old + 1);
+                  }
+                }}
+                iconPos="right"
+                disabled={isPlaceholderData || !data?.hasMore}
+                className="no-shadow p-button-rounded"
+                text
+              />
+            </div>
+          </>
         ) : (
           <div style={{ color: "#7a7a7a", margin: "0.5rem auto 0" }}>
             No User

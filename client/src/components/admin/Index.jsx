@@ -97,12 +97,14 @@ const Index = () => {
               </a>
             </div>
 
-            <button onClick={(e) => handleLogout(e)}>Logout</button>
+            <button onClick={(e) => handleLogout(e)} className="l-btn">
+              Logout
+            </button>
             <i
               className="pi pi-align-justify c-menu"
               style={{
                 color: "white",
-                cursor: "pointer",
+                cursor: "pointer ",
                 marginRight: "0.5rem",
               }}
               onClick={() => setSideview(!sideview)}

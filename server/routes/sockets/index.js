@@ -172,26 +172,6 @@ const handleSockets = (socket) => {
             console.log(error);
         }
     }));
-    socket.on("update-task", ({ id, task, assignTo, deadline, status, progress, priority }, then) => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            if (id) {
-                yield mysqlApi_1.default.queryString(`UPDATE tasks SET task = ?, assignTo = ?, deadline = ?, status = ?, progress = ?, priority = ? WHERE id = ?`, [
-                    task,
-                    JSON.stringify(assignTo),
-                    deadline,
-                    status,
-                    progress,
-                    priority,
-                    id,
-                ]);
-                then((0, functions_1.returnSuccessSocket)());
-                (0, functions_1.broadcastToAll)(socket, yield mysqlApi_1.default.getAll("tasks"), "set-tasks");
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }));
     socket.on("delete-others", ({ id }, then) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (id) {

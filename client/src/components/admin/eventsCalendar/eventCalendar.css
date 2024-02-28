@@ -121,7 +121,7 @@
   flex-direction: row;
   align-items: center;
   gap: 1rem;
-  padding: 0.5rem 0.5rem 0;
+  padding: 0.2rem 0.5rem 0;
 }
 .__events .people .people-card .peep .content .p-avatar {
   min-width: 3rem;
@@ -187,7 +187,7 @@
   gap: 1rem;
   justify-content: flex-start;
 }
-.__events .tasks .tasks-heading button {
+.__events .tasks .tasks-heading button:first-child {
   width: -moz-fit-content;
   width: fit-content;
   margin-left: 0rem;
@@ -197,7 +197,8 @@
   background-color: transparent;
   box-shadow: none;
 }
-.__events .tasks .tasks-heading .p-dropdown {
+.__events .tasks .tasks-heading .p-dropdown,
+.__events .tasks .tasks-heading button:last-child {
   height: 45px;
   width: -moz-fit-content;
   width: fit-content;
@@ -213,7 +214,6 @@
   margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   padding: 0 0.3rem;
 }
 .__events .tasks .tasks-card .task-card {
@@ -503,4 +503,13 @@ a {
   display: flex;
   justify-content: center;
   padding: 5rem 0;
+}
+
+.pagination {
+  display: flex;
+  padding-right: 1rem;
+  justify-content: flex-end;
+}
+.pagination button {
+  cursor: pointer;
 }/*# sourceMappingURL=eventCalendar.css.map */

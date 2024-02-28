@@ -24,10 +24,28 @@ router.get("/cashout", async (req: Request, res: Response) => {
     returnJSONError(res, { error }, 500);
   }
 });
-router.get("/people", async (req: Request, res: Response) => {
+router.get("/all-people", async (req: Request, res: Response) => {
   try {
     const data = await db.getAll("people");
     res.json({ data });
+  } catch (error) {
+    res.json(error);
+  }
+});
+router.get("/people", async (req: Request, res: Response) => {
+  const { _page, _limit } = req.query;
+  // @ts-ignore
+  const offset = (parseInt(_page) - 1) * parseInt(_limit);
+  try {
+    const [count, data] = await db.query(
+      `SELECT COUNT(id) AS total FROM people;SELECT * FROM people LIMIT ${_limit} OFFSET ${offset}`
+    );
+    res.json({
+      data,
+      hasMore:
+        // @ts-ignore
+        Math.ceil(count[0]["total"] / parseInt(_limit)) !== parseInt(_page),
+    });
   } catch (error) {
     res.json(error);
   }
@@ -47,9 +65,20 @@ router.get("/person", async (req: Request, res: Response) => {
   }
 });
 router.get("/tasks", async (req: Request, res: Response) => {
+  const { _page, _limit } = req.query;
+  // @ts-ignore
+  const offset = (parseInt(_page) - 1) * parseInt(_limit);
   try {
-    const data = await db.getAll("tasks");
-    res.json({ data });
+    const [count, countNotApproved, data] = await db.query(
+      `SELECT COUNT(id) AS total FROM tasks;SELECT COUNT(id) AS totalNotApproved FROM tasks WHERE status = 2 AND adminApprove = 0;SELECT * FROM tasks LIMIT ${_limit} OFFSET ${offset}`
+    );
+    res.json({
+      data,
+      hasMore:
+        // @ts-ignore
+        Math.ceil(count[0]["total"] / parseInt(_limit)) !== parseInt(_page),
+      notApproved: countNotApproved[0]["totalNotApproved"],
+    });
   } catch (error) {
     res.json(error);
   }
@@ -63,6 +92,18 @@ router.get("/task", async (req: Request, res: Response) => {
       ]);
       res.json({ data });
     }
+  } catch (error) {
+    console.log(error);
+    returnJSONError(res, {}, 500);
+    // logToFile(error);
+  }
+});
+router.get("/not-approved", async (req: Request, res: Response) => {
+  try {
+    const data = await db.query(
+      "SELECT * FROM tasks WHERE status = 2 AND adminApprove = 0"
+    );
+    res.json({ data });
   } catch (error) {
     console.log(error);
     returnJSONError(res, {}, 500);
@@ -121,6 +162,19 @@ router.post("/create-person", async (req: Request, res: Response) => {
     console.log(error);
   }
 });
+router.put("/person", async (req: Request, res: Response) => {
+  try {
+    const { id, value } = req.body;
+    await db.queryString("UPDATE people SET role = ? WHERE id = ?", [
+      JSON.stringify(value),
+      id,
+    ]);
+    returnJSONSuccess(res);
+  } catch (error) {
+    console.log(error);
+    returnJSONError(res, {}, 500);
+  }
+});
 router.delete("/person", async (req: Request, res: Response) => {
   try {
     const { id } = req.query;
@@ -165,6 +219,29 @@ router.post("/add-role", async (req: Request, res: Response) => {
     returnJSONSuccess(res);
   } catch (error) {
     console.log(error);
+  }
+});
+router.put("/task", async (req: Request, res: Response) => {
+  try {
+    const { task, assignTo, deadline, status, progress, priority, id } =
+      req.body;
+    if (id) {
+      await db.queryString(
+        `UPDATE tasks SET task = ?, assignTo = ?, deadline = ?, status = ?, progress = ?, priority = ? WHERE id = ?`,
+        [
+          task,
+          JSON.stringify(assignTo),
+          deadline,
+          status,
+          progress,
+          priority,
+          id,
+        ]
+      );
+      returnJSONSuccess(res);
+    }
+  } catch (error) {
+    returnJSONError(res, {}, 500);
   }
 });
 export { router };

@@ -4,7 +4,6 @@ import { AvatarGroup } from "primereact/avatargroup";
 import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
 import {
-  colors,
   dateExpired,
   formatList,
   formatTimeAgo,
@@ -15,21 +14,12 @@ import { Tooltip } from "primereact/tooltip";
 import { Rating } from "primereact/rating";
 import { ProgressBar } from "primereact/progressbar";
 import { confirmDialog } from "primereact/confirmdialog";
-import { useContext } from "react";
-import { MainContext } from "../utils/Helper";
-import { toast } from "sonner";
+import { useDeleteTask } from "../components/hooks/mutation";
 const Tasks = ({ tasks }) => {
-  let { io } = useContext(MainContext);
+  const deleteTaskMutation = useDeleteTask();
 
   const deleteTasks = (id) => {
-    io.volatile.emit("delete-task", { id }, (res) => {
-      if (res.status) {
-        // setTasksArr(data.filter((tas) => tas.id !== id));
-        toast.success(res.message, { id: "create" });
-      } else {
-        toast.error(res.message, { id: "create" });
-      }
-    });
+    deleteTaskMutation.mutate(id);
   };
 
   const confirm1 = (id) => {
@@ -69,18 +59,8 @@ const Tasks = ({ tasks }) => {
                             key={assign}
                             label={assign[0].toUpperCase() + "  "}
                             style={{
-                              backgroundColor: returnColor(
-                                index === 0
-                                  ? Math.floor(Math.random() * colors.length)
-                                  : index,
-                                true
-                              )[0],
-                              color: returnColor(
-                                index === 0
-                                  ? Math.floor(Math.random() * colors.length)
-                                  : index,
-                                true
-                              )[1],
+                              backgroundColor: returnColor(i + index, true)[0],
+                              color: returnColor(i + index, true)[1],
                             }}
                             title={formatList(tas.assignTo)}
                           />

@@ -77,7 +77,7 @@ body {
     display: none;
   }
 
-  button:nth-of-type(2) {
+  .l-btn:nth-of-type(2) {
     display: none;
   }
 }
@@ -101,7 +101,7 @@ body {
   font-size: 1.7rem;
   font-family: "Poppins-Regular";
 }
-button {
+.l-btn {
   border: none;
   padding: 0.7rem 1.5rem;
   background: transparent;
@@ -113,14 +113,14 @@ button {
   transition: 0.2s all ease-in;
   margin: 0;
 }
-button:first-of-type {
+.l-btn:first-of-type {
   margin: 0 0 0 auto;
 }
-button:nth-of-type(2) {
+.l-btn:nth-of-type(2) {
   border: 1px solid #f4f4f4;
   margin-right: 0.6rem;
 }
-button:hover {
+.l-btn:hover {
   /* background: white; */
   color: #eee;
   border-color: #cacaca;
@@ -209,7 +209,7 @@ nav a.active {
       font-family: "Poppins-Medium";
       color: white;
     }
-    button {
+    .l-btn {
       width: 100%;
       margin-top: 0.4rem;
     }
